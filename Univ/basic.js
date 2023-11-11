@@ -11,7 +11,7 @@ class App {
         const divContainer = document.querySelector("#webgl-container");
         this._divContainer = divContainer;
 
-        const renderer = new THREE.WebGLRenderer({ antialias: true});
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true});
         renderer.setPixelRatio(window.devicePixelRatio);
         divContainer.appendChild(renderer.domElement);
 
@@ -98,12 +98,12 @@ class App {
         const width = this._divContainer.clientWidth;
         const height = this._divContainer.clientHeight;
         const camera = new THREE.PerspectiveCamera(
-            60,
+            75,
             width / height,
             1,
-            5000
+            50000
         );
-        camera.position.set(0, 100, 500);
+        camera.position.set(0, 300, 800);
         this._camera = camera; 
     }
 
@@ -111,7 +111,7 @@ class App {
         const color = 0xffffff;
         const intensity = 5;
 
-        const pointLight = new THREE.PointLight(color, intensity, 2000);
+        const pointLight = new THREE.PointLight(color, intensity, 1000);
         pointLight.position.set(x, y, z);
 
         this._scene.add(pointLight);
@@ -120,25 +120,19 @@ class App {
         this._scene.add(pointLightHelper);
     }
 
-    _setupLight() {
-        const ambientLight = new THREE.AmbientLight(0xffffff, 10);
-        this._scene.add(ambientLight);
+    _addDLight(x, y, z, tX, tY, tZ) {
+        const color = 0xffffff;
+        const intensity = 5;
         
-        this._addPointLight(500, 150, 500, 0xff0000);
-        this._addPointLight(-500, 150, 500, 0xffff00);
-        this._addPointLight(-500, 150, -500, 0x00ff00);
-        this._addPointLight(500, 150, -500, 0x0000ff);
+        const shadowLight = new THREE.DirectionalLight(color, intensity);
+        shadowLight.position.set(x, y, z);
+        shadowLight.target.position.set(tX, tY, tZ);
 
-        const shadowLight = new THREE.DirectionalLight(0xffffff, 4);
-        shadowLight.position.set(200, 500, 200);
-        shadowLight.target.position.set(0, 0, 0);
         const directionalLightHelper = new THREE.DirectionalLightHelper(shadowLight, 10);
         this._scene.add(directionalLightHelper);
-
         this._scene.add(shadowLight);
         this._scene.add(shadowLight.target);
 
-        // 그림자 설정
         shadowLight.castShadow = true;
         shadowLight.shadow.mapSize.width = 1024;
         shadowLight.shadow.mapSize.height = 1024;
@@ -147,8 +141,43 @@ class App {
         shadowLight.shadow.camera.near = 100;
         shadowLight.shadow.camera.far = 900;
         shadowLight.shadow.radius = 5;
+        
         const shadowCameraHelper = new THREE.CameraHelper(shadowLight.shadow.camera);
         this._scene.add(shadowCameraHelper);
+    }
+    _setupLight() {
+        const ambientLight = new THREE.AmbientLight(0xffffff, 5);
+        this._scene.add(ambientLight);
+
+        this._addPointLight(500, 150, 500, 0xff0000);
+        this._addPointLight(-500, 150, 500, 0xffff00);
+        this._addPointLight(-500, 150, -500, 0x00ff00);
+        this._addPointLight(500, 150, -500, 0x0000ff);
+
+        this._addDLight(200, 5000, 200, 0, 0, 0);
+
+
+        // const shadowLight = new THREE.DirectionalLight(0xffffff, 4);
+        // shadowLight.position.set(200, 500, 200);
+        // shadowLight.target.position.set(0, 0, 0);
+        
+        // const directionalLightHelper = new THREE.DirectionalLightHelper(shadowLight, 10);
+        // this._scene.add(directionalLightHelper);
+
+        // this._scene.add(shadowLight);
+        // this._scene.add(shadowLight.target);
+
+        // 그림자 설정
+        // shadowLight.castShadow = true;
+        // shadowLight.shadow.mapSize.width = 1024;
+        // shadowLight.shadow.mapSize.height = 1024;
+        // shadowLight.shadow.camera.top = shadowLight.shadow.camera.right = 700;
+        // shadowLight.shadow.camera.bottom = shadowLight.shadow.camera.left = -700;
+        // shadowLight.shadow.camera.near = 100;
+        // shadowLight.shadow.camera.far = 900;
+        // shadowLight.shadow.radius = 5;
+        // const shadowCameraHelper = new THREE.CameraHelper(shadowLight.shadow.camera);
+        // this._scene.add(shadowCameraHelper);
         
 
     }
@@ -227,7 +256,7 @@ class App {
             // this._worldOctree.fromGraphNode(boxM);  // worldOctree에 3D모델을 추가해야 충돌 검사가 이뤄짐
         });
 
-        loader.load("./data/Univ.glb", (gltf)=> { // 블렌더 파일
+        loader.load("./data/test.glb", (gltf)=> { // 블렌더 파일
             const model = gltf.scene;
 
             this._scene.add(model);
