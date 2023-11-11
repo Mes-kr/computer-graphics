@@ -256,7 +256,7 @@ class App {
             // this._worldOctree.fromGraphNode(boxM);  // worldOctree에 3D모델을 추가해야 충돌 검사가 이뤄짐
         });
 
-        loader.load("./data/test.glb", (gltf)=> { // 블렌더 파일
+        loader.load("./data/last.glb", (gltf)=> { // 블렌더 파일
             const model = gltf.scene;
 
             this._scene.add(model);
