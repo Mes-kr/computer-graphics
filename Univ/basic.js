@@ -72,7 +72,7 @@ class App {
             if(this._pressedKeys['shift']) {    // Shift 누르면서 w, a, s, d 중 하나 누르면 Run
                 this._currentAnimationAction = this._animationMap["Run"];
                 //this._speed = 350;
-                this._maxSpeed = 350;
+                this._maxSpeed = 500;
                 this._acceleraction = 3; 
             } else {
                 this._currentAnimationAction = this._animationMap["Walk"];
@@ -116,8 +116,9 @@ class App {
 
         this._scene.add(pointLight);
 
-        const pointLightHelper = new THREE.PointLightHelper(pointLight, 10, helperColor);
-        this._scene.add(pointLightHelper);
+        // --------------> pointlight 헬퍼
+        // const pointLightHelper = new THREE.PointLightHelper(pointLight, 10, helperColor);
+        // this._scene.add(pointLightHelper);
     }
 
     _addDLight(x, y, z, tX, tY, tZ) {
@@ -128,8 +129,9 @@ class App {
         shadowLight.position.set(x, y, z);
         shadowLight.target.position.set(tX, tY, tZ);
 
-        const directionalLightHelper = new THREE.DirectionalLightHelper(shadowLight, 10);
-        this._scene.add(directionalLightHelper);
+        // --------------> directionalLight 헬퍼
+        // const directionalLightHelper = new THREE.DirectionalLightHelper(shadowLight, 10);
+        // this._scene.add(directionalLightHelper);
         this._scene.add(shadowLight);
         this._scene.add(shadowLight.target);
 
@@ -142,8 +144,9 @@ class App {
         shadowLight.shadow.camera.far = 900;
         shadowLight.shadow.radius = 5;
         
-        const shadowCameraHelper = new THREE.CameraHelper(shadowLight.shadow.camera);
-        this._scene.add(shadowCameraHelper);
+        // ----------> cameraHelper
+        // const shadowCameraHelper = new THREE.CameraHelper(shadowLight.shadow.camera);
+        // this._scene.add(shadowCameraHelper);
     }
     _setupLight() {
         const ambientLight = new THREE.AmbientLight(0xffffff, 5);
@@ -256,7 +259,7 @@ class App {
             // this._worldOctree.fromGraphNode(boxM);  // worldOctree에 3D모델을 추가해야 충돌 검사가 이뤄짐
         });
 
-        loader.load("./data/last.glb", (gltf)=> { // 블렌더 파일
+        loader.load("./data/background.glb", (gltf)=> { // 블렌더 파일
             const model = gltf.scene;
 
             this._scene.add(model);
